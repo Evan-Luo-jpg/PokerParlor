@@ -4,25 +4,29 @@
 #include <vector>
 #include "card.h"
 
-class Deck{
-    private:
-        std::vector<Card> cards;
-    public:
-        //Constructor to initialize the deck with 52 cards
-        Deck();
+class Deck
+{
+private:
+    std::vector<Card> cards;
 
-        //Function to shuffle the deck
-        void shuffle();
+public:
+    // Constructor to initialize the deck with 52 cards
+    Deck();
 
-        //Function to draw a card from the deck
-        Card draw();
+    // Function to shuffle the deck
+    void shuffle();
 
-        //Function to return the number of cards in the deck
-        int size() const;
+    // Function to populate the deck with 52 cards
+    void popluate();
 
-        //Function to reset the deck
-        void reset();
+    // Function to draw a card from the deck
+    Card draw();
+
+    // Function to return the number of cards in the deck
+    int size() const;
+
+    // Function to reset the deck
+    void reset();
 };
-
 
 #endif
