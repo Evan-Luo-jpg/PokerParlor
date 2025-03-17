@@ -40,6 +40,11 @@ void Deck::shuffle()
 Card Deck::draw()
 {
     // Get the top card from the deck
+    if (cards.size() == 0)
+    {
+        throw std::out_of_range("Cannot draw from an empty deck.");
+    }
+
     Card topCard = cards.back();
 
     // Remove the top card from the deck

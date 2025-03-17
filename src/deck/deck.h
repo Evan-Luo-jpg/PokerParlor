@@ -17,7 +17,7 @@ public:
     void shuffle();
 
     // Function to populate the deck with 52 cards
-    void popluate();
+    void populate();
 
     // Function to draw a card from the deck
     Card draw();
