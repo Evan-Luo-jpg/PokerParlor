@@ -24,6 +24,12 @@ void Player::bet(int amount)
     stack -= amount;
 }
 
+// Function to add to the player's stack
+void Player::addToStack(int amount)
+{
+    stack += amount;
+}
+
 // Function to clear the players hand
 void Player::clearHand()
 {

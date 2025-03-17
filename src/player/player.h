@@ -30,6 +30,9 @@ public:
     // Function to bet a certain amount
     void bet(int amount);
 
+    // Function to add to the player's stack
+    void addToStack(int amount);
+
     // Function to clear the players hand
     void clearHand();
 
