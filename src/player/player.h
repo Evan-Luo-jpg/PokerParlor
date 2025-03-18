@@ -20,6 +20,7 @@ private:
     std::vector<Card> hand;
     long ID;
     int stack;
+    int currentBet;
 public:
     // Constructor to initialize the player
     Player(long ID, int stack);
@@ -36,8 +37,20 @@ public:
     // Function to clear the players hand
     void clearHand();
 
+    // Function to resrt the player's current bet
+    void resetCurrentBet();
+
+    // Function to get the player's current bet
+    int getCurrentBet() const;
+
+    // Function to check if the player is still in the hand
+    bool hasFolded() const; 
+
+    // Function to fold the player's hand
+    void fold();
+
     //Function to get the action of the player
-    Action getAction();
+    Action getAction(std::vector<Action> possibleActions);
 
     // Function to get the player's ID
     long getID() const;

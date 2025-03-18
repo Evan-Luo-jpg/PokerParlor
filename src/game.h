@@ -17,18 +17,21 @@ enum Street{
 
 class Game{
     private:
+    int time;
     int smallBlind;
     int bigBlind;
     Street street;
     int highestBet;
     int pot;
+    int currentButtonIndex;
     int currentPlayerIndex;
     int playersInHand;
     std::vector<Player> players;
     Deck deck;
+
     public:
     // Constructor to initialize the game
-    Game();
+    Game(int smallBlind, int bigBlind);
 
 
     // Function to add a player to the game
@@ -47,9 +50,12 @@ class Game{
     Street getStreet();
 
     // Function to check if the betting is complete
-    bool bettingComplete();
+    bool bettingComplete(int player_index);
 
     // Helpers
+
+    // Function to play the street
+    void playStreet();
     void nextPlayer();
     Player& getCurrentPlayer();
 
