@@ -1,6 +1,4 @@
-#include "deck/card.h"
 #include <vector>
-#include "deck/deck.h"
 #include "player/player.h"
 #include <iostream>
 

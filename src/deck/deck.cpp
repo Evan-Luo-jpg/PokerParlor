@@ -2,7 +2,6 @@
 #include <iostream>
 #include <algorithm> // For shuffle
 #include <random>    // For random number generation
-#include "card.h"
 
 // Function to populate the deck with 52 cards
 void Deck::populate()

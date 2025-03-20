@@ -27,6 +27,7 @@ void Game::startRound()
         player.clearHand();
         player.addCards(deck.draw(), deck.draw());
     }
+    std::cout << "Players have been dealt their cards.\n";
 
     // Post blinds
     int smallBlindIndex = (currentButtonIndex + 1) % players.size();
@@ -36,9 +37,10 @@ void Game::startRound()
     players[bigBlindIndex].bet(bigBlind);
     pot += smallBlind + bigBlind;
     highestBet = bigBlind;
+    std::cout << "Player " << players[smallBlindIndex].getID() << " posts the small blind of " << smallBlind << ".\n";
+    std::cout << "Player " << players[bigBlindIndex].getID() << " posts the big blind of " << bigBlind << ".\n";
+    
     currentPlayerIndex = (bigBlindIndex + 1) % players.size();
-
-    std::cout << "Round started. Players have been dealt their cards.\n";
 }
 
 // Play a round with betting logic

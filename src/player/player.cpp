@@ -1,8 +1,6 @@
 #include "player.h"
 #include <iostream>
 #include <chrono>
-#include "deck/card.h"
-#include "deck/deck.h"
 
 
 // Constructor to initialize the player
