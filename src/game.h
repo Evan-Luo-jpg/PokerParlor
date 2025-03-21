@@ -50,11 +50,14 @@ class Game{
     // Function to check if the betting is complete
     bool bettingComplete(int player_index);
 
-    // Helpers
+    // Find the player first to act
+    int getFirstToActIndex();
 
+    // Helpers
     // Function to play the street
     void playStreet();
     void nextPlayer();
+    bool playersAllIn();
     Player& getCurrentPlayer();
 
 };

@@ -21,9 +21,16 @@ private:
     long ID;
     int stack;
     int currentBet;
+    bool allIn;
 public:
     // Constructor to initialize the player
     Player(long ID, int stack);
+
+    // Is all in
+    bool isAllIn();
+
+    // Function to reset a player all in
+    void resetAllIn();
 
     // Function to add two cards to the player's hand
     void addCards(Card card1, Card card2);
@@ -33,6 +40,9 @@ public:
 
     // Function to add to the player's stack
     void addToStack(int amount);
+
+    // Function to get the player's stack
+    int getStack() const;
 
     // Function to clear the players hand
     void clearHand();

@@ -9,6 +9,19 @@ Player::Player(long ID, int stack)
     this->ID = ID;
     this->stack = stack;
     currentBet = 0;
+    allIn = false;
+}
+
+// Is all in
+bool Player::isAllIn()
+{
+    return allIn;
+}
+
+// Function to reset a player all in
+void Player::resetAllIn()
+{
+    allIn = false;
 }
 
 // Function to add two cards to the player's hand
@@ -21,6 +34,12 @@ void Player::addCards(Card card1, Card card2)
 // Function to bet a certain amount
 void Player::bet(int amount)
 {
+    if (amount > stack)
+    {
+        std::cout << "Player " << ID << " is all in with " << stack << " chips.\n";
+        amount = stack;
+        allIn = true;
+    }
     currentBet += amount;
     stack -= amount;
 }
@@ -29,6 +48,12 @@ void Player::bet(int amount)
 void Player::addToStack(int amount)
 {
     stack += amount;
+}
+
+// Function to get the player's stack
+int Player::getStack() const
+{
+    return stack;
 }
 
 // Function to clear the players hand
@@ -51,7 +76,10 @@ Action Player::getAction(std::vector<Action> possibleActions)
         end = std::chrono::high_resolution_clock::now();
         elapsed = end - start;
 
-        // In here the player will choose an action
+        // In here the player will choose an action for now just choose a random action
+        std::cout << "Player " << ID << " has " << stack << " chips. Choose an action: ";
+        int rand_action = int(std::rand() % possibleActions.size());
+        return possibleActions[rand_action];
     }
     // Will want to implement user action as well as what actions are currently available
     // For now, the player will always fold

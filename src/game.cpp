@@ -39,7 +39,7 @@ void Game::startRound()
     highestBet = bigBlind;
     std::cout << "Player " << players[smallBlindIndex].getID() << " posts the small blind of " << smallBlind << ".\n";
     std::cout << "Player " << players[bigBlindIndex].getID() << " posts the big blind of " << bigBlind << ".\n";
-    
+
     currentPlayerIndex = (bigBlindIndex + 1) % players.size();
 }
 
@@ -48,6 +48,9 @@ void Game::playRound()
 {
     while (playersInHand > 1 && street != SHOWDOWN)
     {
+        // Print street
+        std::cout << "The current street is: " << street << "\n";
+
         playStreet();
         if (playersInHand == 1)
         {
@@ -62,6 +65,12 @@ void Game::playRound()
                 }
             }
         }
+
+        if (playersAllIn())
+        {
+            evaluateWinner();
+            return;
+        }
         // Move to the next street
         street = static_cast<Street>(street + 1);
     }
@@ -70,6 +79,7 @@ void Game::playRound()
     if (street == SHOWDOWN)
     {
         evaluateWinner();
+        return;
     }
 }
 
@@ -77,6 +87,10 @@ void Game::playStreet()
 {
     bool bettingOver = false;
     int lastRaiser = -1;
+    bool bigBlindActed = false;
+    int smallBlindIndex = (currentButtonIndex + 1) % players.size();
+    int bigBlindIndex = (smallBlindIndex + 1) % players.size();
+    currentPlayerIndex = getFirstToActIndex();
 
     while (!bettingOver)
     {
@@ -87,6 +101,15 @@ void Game::playStreet()
             nextPlayer();
             continue;
         }
+
+        if (player.getStack() <= 0 && player.isAllIn() == false)
+        {
+            player.fold();
+            playersInHand--;
+            nextPlayer();
+            continue;
+        }
+
         std::vector<Action> possibleActions;
         if (player.getCurrentBet() < highestBet)
         {
@@ -133,6 +156,19 @@ void Game::playStreet()
         }
         }
         nextPlayer();
+
+        // Ensure big blind gets a final action pre-flop if no raise occurred after their blind
+        if (street == PREFLOP && !bigBlindActed && currentPlayerIndex == bigBlindIndex)
+        {
+            bigBlindActed = true;
+            continue;
+        }
+        if (lastRaiser == -1 && currentPlayerIndex != getFirstToActIndex())
+        {
+            // AKA the player just checked and it is not back on the first to act yet
+            continue;
+        }
+
         bettingOver = bettingComplete(lastRaiser);
     }
 }
@@ -141,13 +177,14 @@ void Game::playStreet()
 bool Game::bettingComplete(int lastRaiser)
 {
     int playersCalled = 0;
-    for (const auto &player : players)
+    for (auto &player : players)
     {
         if (!player.hasFolded() && player.getCurrentBet() == highestBet)
         {
             playersCalled++;
         }
     }
+
     return playersInHand == 1 || playersCalled == playersInHand;
 }
 
@@ -170,10 +207,45 @@ Player &Game::getCurrentPlayer()
 void Game::evaluateWinner()
 {
     std::cout << "Evaluating winner... (logic to be implemented)\n";
+
+    // Debugging and print each players hand and stats
 }
 
 // Get the current street
 Street Game::getStreet()
 {
     return street;
+}
+
+// Check if all players are all in
+bool Game::playersAllIn()
+{
+    int playersAllIn = 0;
+    for (auto &player : players)
+    {
+        if (player.isAllIn())
+        {
+            playersAllIn++;
+        }
+    }
+    return playersAllIn == playersInHand;
+}
+
+int Game::getFirstToActIndex()
+{
+    int smallBlindIndex = (currentButtonIndex + 1) % players.size();
+    int bigBlindIndex = (smallBlindIndex + 1) % players.size();
+    int firstToAct = (currentButtonIndex + 1) % players.size();
+    if (street == PREFLOP)
+    {
+        firstToAct = (bigBlind + 2) % players.size();
+    }
+
+    // Find the first player still in the hand
+    while (players[firstToAct].hasFolded())
+    {
+        firstToAct = (firstToAct + 1) % players.size();
+    }
+
+    return firstToAct;
 }
