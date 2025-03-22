@@ -27,6 +27,8 @@ class Game{
     std::vector<Player> players;
     Deck deck;
 
+    std::vector<Card> communityCards;
+
     public:
     // Constructor to initialize the game
     Game(int smallBlind, int bigBlind);

@@ -102,6 +102,12 @@ void Game::playStreet()
             continue;
         }
 
+        // If the action goes back to the raiser
+        if(currentPlayerIndex == lastRaiser){
+            bettingOver = true;
+            continue;
+        }
+
         if (player.getStack() <= 0 && player.isAllIn() == false)
         {
             player.fold();
@@ -111,7 +117,11 @@ void Game::playStreet()
         }
 
         std::vector<Action> possibleActions;
-        if (player.getCurrentBet() < highestBet)
+        if (player.getCurrentBet() == highestBet)
+        {
+            possibleActions = {CHECK, RAISE};
+        }
+        else if (player.getCurrentBet() < highestBet)
         {
             possibleActions = {FOLD, CALL, RAISE};
         }
@@ -149,7 +159,8 @@ void Game::playStreet()
             std::cin >> raiseAmount;
             highestBet += raiseAmount;
             lastRaiser = currentPlayerIndex;
-            player.bet(highestBet);
+            raiseAmount = highestBet - player.getCurrentBet();
+            player.bet(raiseAmount);
             pot += highestBet;
             std::cout << "Player " << player.getID() << " raises to " << highestBet << ".\n";
             break;
@@ -183,6 +194,11 @@ bool Game::bettingComplete(int lastRaiser)
         {
             playersCalled++;
         }
+    }
+
+    // Count in the person who originally raised as a caller as well
+    if (lastRaiser == currentPlayerIndex){
+        playersCalled++;
     }
 
     return playersInHand == 1 || playersCalled == playersInHand;
