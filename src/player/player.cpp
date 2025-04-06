@@ -78,8 +78,23 @@ Action Player::getAction(std::vector<Action> possibleActions)
 
         // In here the player will choose an action for now just choose a random action
         std::cout << "Player " << ID << " has " << stack << " chips. Choose an action: ";
-        int rand_action = int(std::rand() % possibleActions.size());
-        return possibleActions[rand_action];
+        
+        //Get player action from console
+        for (size_t i = 0; i < possibleActions.size(); ++i)
+        {
+            std::cout << i + 1 << ": " << actionToString(possibleActions[i]) << " ";
+        }
+        std::cout << "\n";
+        std::cout << "Enter action number: ";
+        int actionNumber;
+        std::cin >> actionNumber;
+        if (actionNumber < 1 || actionNumber > possibleActions.size())
+        {
+            std::cout << "Invalid action. Please try again.\n";
+            continue;
+        }
+
+        return possibleActions[actionNumber - 1];
     }
     // Will want to implement user action as well as what actions are currently available
     // For now, the player will always fold

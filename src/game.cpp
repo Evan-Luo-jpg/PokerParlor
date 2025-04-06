@@ -51,6 +51,15 @@ void Game::playRound()
         // Print street
         std::cout << "The current street is: " << street << "\n";
 
+        //Print the community cards
+        std::cout << "Community Cards: ";
+        for (auto &card : communityCards)
+        {
+            std::cout << card.toString() << " ";
+        }
+        std::cout << "\n";
+
+        // Play the street
         playStreet();
         if (playersInHand == 1)
         {
@@ -92,6 +101,35 @@ void Game::playStreet()
     int bigBlindIndex = (smallBlindIndex + 1) % players.size();
     currentPlayerIndex = getFirstToActIndex();
 
+    // Run the community cards logic
+    if (street == FLOP)
+    {
+        // Burn a card
+        Card burn = deck.draw();
+        // Deal three community cards
+        communityCards.push_back(deck.draw());
+        communityCards.push_back(deck.draw());
+        communityCards.push_back(deck.draw());
+        std::cout << "Flop: " << communityCards[0].toString() << ", " << communityCards[1].toString() << ", " << communityCards[2].toString() << "\n";
+    }
+    else if (street == TURN)
+    {
+        //Burn a card
+        Card burn = deck.draw();
+        //Deal one community card
+        communityCards.push_back(deck.draw());
+        std::cout << "Turn: " << communityCards[3].toString() << "\n";
+    }
+    else if (street == RIVER)
+    {
+        //Burn a card
+        Card burn = deck.draw();
+        //Deal one community card
+        communityCards.push_back(deck.draw());
+        std::cout << "River: " << communityCards[4].toString() << "\n";
+    }
+
+    // Betting round
     while (!bettingOver)
     {
         Player &player = getCurrentPlayer();
@@ -161,7 +199,7 @@ void Game::playStreet()
             lastRaiser = currentPlayerIndex;
             raiseAmount = highestBet - player.getCurrentBet();
             player.bet(raiseAmount);
-            pot += highestBet;
+            pot += raiseAmount;
             std::cout << "Player " << player.getID() << " raises to " << highestBet << ".\n";
             break;
         }

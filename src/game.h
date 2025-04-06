@@ -55,6 +55,11 @@ class Game{
     // Find the player first to act
     int getFirstToActIndex();
 
+    // Get community cards
+    std::vector<Card> getCommunityCards() {
+        return communityCards;
+    }
+
     // Helpers
     // Function to play the street
     void playStreet();

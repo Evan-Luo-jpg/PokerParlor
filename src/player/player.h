@@ -59,6 +59,24 @@ public:
     // Function to fold the player's hand
     void fold();
 
+    // Function to turn action to string
+    std::string actionToString(Action action) const
+    {
+        switch (action)
+        {
+        case FOLD:
+            return "Fold";
+        case CHECK:
+            return "Check";
+        case CALL:
+            return "Call";
+        case RAISE:
+            return "Raise";
+        default:
+            return "Unknown Action";
+        }
+    }
+
     //Function to get the action of the player
     Action getAction(std::vector<Action> possibleActions);
 
