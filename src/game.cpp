@@ -21,6 +21,12 @@ void Game::startRound()
     currentButtonIndex = (currentButtonIndex + 1) % players.size();
     street = PREFLOP;
 
+    //Reset deck
+    deck.reset();
+
+    //Clear community cards
+    communityCards.clear();
+
     // Deal two cards to each player
     for (auto &player : players)
     {
@@ -51,16 +57,10 @@ void Game::playRound()
         // Print street
         std::cout << "The current street is: " << street << "\n";
 
-        //Print the community cards
-        std::cout << "Community Cards: ";
-        for (auto &card : communityCards)
-        {
-            std::cout << card.toString() << " ";
-        }
-        std::cout << "\n";
-
         // Play the street
         playStreet();
+
+
         if (playersInHand == 1)
         {
             // Award the pot to the last remaining player
@@ -100,10 +100,21 @@ void Game::playStreet()
     int smallBlindIndex = (currentButtonIndex + 1) % players.size();
     int bigBlindIndex = (smallBlindIndex + 1) % players.size();
     currentPlayerIndex = getFirstToActIndex();
+    // Reset all players' current bets
+    highestBet = 0;
+    if (street != PREFLOP){
+        for (auto &player : players)
+        {
+            player.resetCurrentBet();
+        }
+    }else{
+        highestBet = bigBlind;
+    }
 
     // Run the community cards logic
     if (street == FLOP)
     {
+
         // Burn a card
         Card burn = deck.draw();
         // Deal three community cards
@@ -128,6 +139,15 @@ void Game::playStreet()
         communityCards.push_back(deck.draw());
         std::cout << "River: " << communityCards[4].toString() << "\n";
     }
+
+
+    //Print the community cards
+    std::cout << "Community Cards: ";
+    for (auto &card : communityCards)
+    {
+        std::cout << card.toString() << ", ";
+    }
+    std::cout << "\n";
 
     // Betting round
     while (!bettingOver)
@@ -194,7 +214,15 @@ void Game::playStreet()
         {
             int raiseAmount;
             std::cout << "Player " << player.getID() << " raises by: ";
-            std::cin >> raiseAmount;
+            if (player.isBot())
+            {
+                raiseAmount = player.getStack() / 2; // Bot raises half their stack
+                std::cout << raiseAmount << "\n";
+            }
+            else
+            {
+                std::cin >> raiseAmount;
+            }
             highestBet += raiseAmount;
             lastRaiser = currentPlayerIndex;
             raiseAmount = highestBet - player.getCurrentBet();

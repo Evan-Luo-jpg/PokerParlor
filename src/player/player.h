@@ -22,9 +22,10 @@ private:
     int stack;
     int currentBet;
     bool allIn;
+    bool bot;
 public:
     // Constructor to initialize the player
-    Player(long ID, int stack);
+    Player(long ID, int stack, bool bot = false);
 
     // Is all in
     bool isAllIn();
@@ -47,7 +48,7 @@ public:
     // Function to clear the players hand
     void clearHand();
 
-    // Function to resrt the player's current bet
+    // Function to reset the player's current bet
     void resetCurrentBet();
 
     // Function to get the player's current bet
@@ -58,6 +59,12 @@ public:
 
     // Function to fold the player's hand
     void fold();
+
+    // Function to check if the player is a bot
+    bool isBot() const
+    {
+        return bot;
+    }
 
     // Function to turn action to string
     std::string actionToString(Action action) const

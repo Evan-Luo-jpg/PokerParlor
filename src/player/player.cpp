@@ -4,12 +4,13 @@
 
 
 // Constructor to initialize the player
-Player::Player(long ID, int stack)
+Player::Player(long ID, int stack, bool bot)
 {
     this->ID = ID;
     this->stack = stack;
     currentBet = 0;
     allIn = false;
+    this->bot = bot; // Set to true if the player is a bot
 }
 
 // Is all in
@@ -74,15 +75,21 @@ Action Player::getAction(std::vector<Action> possibleActions)
     while (elapsed.count() < 30)
     {
         end = std::chrono::high_resolution_clock::now();
-        elapsed = end - start;
 
-        // In here the player will choose an action for now just choose a random action
+        // If the player is a bot, choose a random action
+        if (bot)
+        {
+            // Randomly choose an action
+            int randomIndex = rand() % possibleActions.size();
+            return possibleActions[randomIndex];
+        }
+        // If the player is not a bot, get the action from the console
         std::cout << "Player " << ID << " has " << stack << " chips. Choose an action: ";
         
         //Get player action from console
         for (size_t i = 0; i < possibleActions.size(); ++i)
         {
-            std::cout << i + 1 << ": " << actionToString(possibleActions[i]) << " ";
+            std::cout << i + 1 << ":" << actionToString(possibleActions[i]) << " ";
         }
         std::cout << "\n";
         std::cout << "Enter action number: ";
@@ -93,6 +100,10 @@ Action Player::getAction(std::vector<Action> possibleActions)
             std::cout << "Invalid action. Please try again.\n";
             continue;
         }
+
+
+        elapsed = end - start;
+
 
         return possibleActions[actionNumber - 1];
     }
