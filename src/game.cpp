@@ -216,7 +216,7 @@ void Game::playStreet()
             std::cout << "Player " << player.getID() << " raises by: ";
             if (player.isBot())
             {
-                raiseAmount = player.getStack() / 2; // Bot raises half their stack
+                raiseAmount = rand() % player.getStack(); // Bot raises random number of stack
                 std::cout << raiseAmount << "\n";
             }
             else
