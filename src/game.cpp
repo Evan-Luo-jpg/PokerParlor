@@ -140,6 +140,19 @@ void Game::playStreet()
         std::cout << "River: " << communityCards[4].toString() << "\n";
     }
 
+    //Print player cards
+    for (auto &player : players)
+    {
+        if (!player.hasFolded() && !player.isBot())
+        {
+            std::cout << "Player " << player.getID() << " has: ";
+            for (auto &card : player.getHand())
+            {
+                std::cout << card.toString() << ", ";
+            }
+            std::cout << "\n";
+        }
+    }
 
     //Print the community cards
     std::cout << "Community Cards: ";
