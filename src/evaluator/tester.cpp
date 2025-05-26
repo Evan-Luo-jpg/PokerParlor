@@ -1,6 +1,7 @@
 #include "evaluator.h"
 #include "../deck/card.h"
 #include <iostream>
+//g++ -std=c++23 -I./src/deck -I./src/evaluator ./src/evaluator/tester.cpp ./src/deck/card.cpp ./src/evaluator/evaluator.cpp -o tester
 //   As an example, the Five of Hearts would be represented as
 //
 //   +--------+--------+--------+--------+
