@@ -122,6 +122,7 @@ long Player::getID() const
 void Player::fold()
 {
     clearHand();
+    folded = true; // Set the player as folded
 }
 
 // Function to reset the players current bet

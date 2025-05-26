@@ -1,5 +1,6 @@
 #include "game.h"
 #include <iostream>
+#include "../evaluator/evaluator.cpp"
 
 // Constructor to initialize the game
 Game::Game(int smallBlind, int bigBlind) : pot(0), currentPlayerIndex(0), street(PREFLOP), highestBet(0), playersInHand(0), smallBlind(smallBlind), bigBlind(bigBlind), currentButtonIndex(0) {}
@@ -77,6 +78,13 @@ void Game::playRound()
 
         if (playersAllIn())
         {
+            std::cout << "All players are all-in. Moving to showdown.\n";
+            // Run all the community cards logic and make the runouts
+            while (street != SHOWDOWN)
+            {
+                playStreet();
+                street = static_cast<Street>(street + 1);
+            }
             evaluateWinner();
             return;
         }
@@ -161,6 +169,13 @@ void Game::playStreet()
         std::cout << card.toString() << ", ";
     }
     std::cout << "\n";
+    
+    // Check if players are all in
+    if (playersAllIn())
+    {
+        std::cout << "All players are all in \n";
+        return;
+    }
 
     // Betting round
     while (!bettingOver)

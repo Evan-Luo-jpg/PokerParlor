@@ -18,6 +18,7 @@ class Player
 {
 private:
     std::vector<Card> hand;
+    bool folded; // Indicates if the player has folded
     long ID;
     int stack;
     int currentBet;
