@@ -151,7 +151,7 @@ void Game::playStreet()
     //Print player cards
     for (auto &player : players)
     {
-        if (!player.hasFolded() && !player.isBot())
+        if (!player.hasFolded() /**&& !player.isBot()**/)
         {
             std::cout << "Player " << player.getID() << " has: ";
             for (auto &card : player.getHand())
@@ -316,9 +316,76 @@ Player &Game::getCurrentPlayer()
 // Evaluate winner (placeholder)
 void Game::evaluateWinner()
 {
-    std::cout << "Evaluating winner... (logic to be implemented)\n";
+    unsigned short bestScore = 9999;
+    std::vector<long> winners;
+    // Loop through players and encode their hands into the evaluator
+    for (auto &player : players)
+    {
+        if (!player.hasFolded())
+        {
+            int* hand = new int[7];
+            for (size_t i = 0; i < player.getHand().size(); ++i)
+            {
+                hand[i] = encodeCard(player.getHand()[i]);
+            }
+            for (size_t i = 0; i < communityCards.size(); ++i)
+            {
+                hand[i + player.getHand().size()] = encodeCard(communityCards[i]);
+            }
+            unsigned short score = eval_7hand(hand);
+            if (score < bestScore || bestScore == 0)
+            {
+                // We want to chop the pot if there is a tie
+                if (score != bestScore){
+                    winners.clear(); 
+                }
+                bestScore = score;
+                winners.push_back(player.getID());
+            }
+            else if (score == bestScore)
+            {
+                winners.push_back(player.getID());
+            }
+            std::cout << "Player " << player.getID() << " has a hand score of: " << score << "\n";
+            delete[] hand; // Clean up dynamically allocated memory
+        }
+    }
 
-    // Debugging and print each players hand and stats
+    // Find the player with the highest score
+    if (winners.size() > 1)
+    {
+        std::cout << "It's a tie between players: ";
+        for (auto &winner : winners)
+        {
+            std::cout << winner << " ";
+        }
+        std::cout << "\n";
+        // Split the pot among winners
+        int splitPot = pot / winners.size();
+        for (auto &winnerID : winners)
+        {
+            for (auto &player : players)
+            {
+                if (player.getID() == winnerID)
+                {
+                    player.addToStack(splitPot);
+                    std::cout << "Player " << player.getID() << " wins " << splitPot << " chips.\n";
+                }
+            }
+        }
+    }
+    else
+    {
+        long winnerID = winners[0];
+        for (auto &player : players)
+        {
+            if (player.getID() == winnerID)
+            {
+                player.addToStack(pot);
+                std::cout << "Player " << player.getID() << " wins the pot of " << pot << " chips!\n";
+            }
+        }
+    }
 }
 
 // Get the current street

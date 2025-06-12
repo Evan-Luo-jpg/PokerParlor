@@ -14,7 +14,7 @@
 //   |00000100|00000000|10001010|00011111| = 0x04008A1F
 //   +--------+--------+--------+--------+
 int main() {
-	Card testerCard(QUEEN, CLUBS);
+	Card testerCard(FIVE, HEARTS);
 	int encoded = encodeCard(testerCard);
 	std::cout << "Encoded card: " << std::hex << encoded << std::dec << "\n";
 	return 0;

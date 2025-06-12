@@ -5,9 +5,9 @@ int main() {
     Game game(10, 20); // Small blind = 10, Big blind = 20
 
     // Add players
-    game.addPlayer(Player(1, 100));
+    game.addPlayer(Player(0, 100));
+    game.addPlayer(Player(1, 100, true)); // Bot player
     game.addPlayer(Player(2, 100, true)); // Bot player
-    game.addPlayer(Player(3, 100, true)); // Bot player
 
     // Start a round
     game.startRound();
