@@ -35,7 +35,7 @@ void Player::addCards(Card card1, Card card2)
 // Function to bet a certain amount
 void Player::bet(int amount)
 {
-    if (amount > stack)
+    if (amount >= stack)
     {
         std::cout << "Player " << ID << " is all in with " << stack << " chips.\n";
         amount = stack;

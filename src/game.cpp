@@ -82,8 +82,8 @@ void Game::playRound()
             // Run all the community cards logic and make the runouts
             while (street != SHOWDOWN)
             {
-                playStreet();
                 street = static_cast<Street>(street + 1);
+                playStreet();
             }
             evaluateWinner();
             return;
@@ -180,9 +180,14 @@ void Game::playStreet()
     // Betting round
     while (!bettingOver)
     {
+         if (playersAllIn())
+        {
+            std::cout << "All players are all in \n";
+            return;
+        }
         Player &player = getCurrentPlayer();
 
-        if (player.hasFolded())
+        if (player.hasFolded() || player.isAllIn())
         {
             nextPlayer();
             continue;
