@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "arrays.h"
-#include "evaluator.h"
-#include "../deck/card.h"
+#include "evaluator.hpp"
+#include "../deck/deck.hpp"
 // Poker hand evaluator
 //
 // Kevin L. Suffecool
@@ -238,4 +238,14 @@ int encodeCard(const Card& card) {
 
     int cardVal = primes[rank] | (rank << 8) | suitMask | (1 << (16 + rank));
     return cardVal;
+}
+
+
+// Encoding the whole deck for the Monte Carlo simulation
+int* encodeDeck(const std::vector<Card>& deck) {
+    int* encodedDeck = new int[deck.size()];
+    for (size_t i = 0; i < deck.size(); ++i) {
+        encodedDeck[i] = encodeCard(deck[i]);
+    }
+    return encodedDeck;
 }

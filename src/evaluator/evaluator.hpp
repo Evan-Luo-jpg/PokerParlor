@@ -1,4 +1,4 @@
-#include "../deck/card.h"
+#include "../deck/card.hpp"
 
 #define	STRAIGHT_FLUSH  1
 #define	FOUR_OF_A_KIND  2
@@ -59,3 +59,5 @@ unsigned short
 eval_7hand(int *hand);
 
 int encodeCard(const Card& card);
+
+int* encodeDeck(const std::vector<Card>& deck);

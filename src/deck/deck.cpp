@@ -1,4 +1,4 @@
-#include "deck.h"
+#include "deck.hpp"
 #include <iostream>
 #include <algorithm> // For shuffle
 #include <random>    // For random number generation

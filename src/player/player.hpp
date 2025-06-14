@@ -1,7 +1,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 #include <vector>
-#include "../deck/deck.h"
+#include "../deck/deck.hpp"
 
 
 // Enum to represent the action of a player
