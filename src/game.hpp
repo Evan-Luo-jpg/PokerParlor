@@ -1,16 +1,8 @@
 #include <vector>
 #include "player/player.hpp"
 #include <iostream>
-
-
-// Represents the street of poker
-enum Street{
-    PREFLOP,
-    FLOP,
-    TURN,
-    RIVER,
-    SHOWDOWN
-};
+#include "../equity/equity.hpp"
+#include "../evaluator/evaluator.hpp"
 
 
 class Game{

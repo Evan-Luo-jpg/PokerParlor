@@ -1,6 +1,5 @@
 #include "game.hpp"
 #include <iostream>
-#include "../evaluator/evaluator.cpp"
 
 // Constructor to initialize the game
 Game::Game(int smallBlind, int bigBlind) : pot(0), currentPlayerIndex(0), street(PREFLOP), highestBet(0), playersInHand(0), smallBlind(smallBlind), bigBlind(bigBlind), currentButtonIndex(0) {}
@@ -61,6 +60,14 @@ void Game::playRound()
         // Play the street
         playStreet();
 
+        // Equity count
+        int* remainingDeck = encodeDeck(deck.getCards());
+        int sizeofDeck = deck.getCards().size();
+        int* communityCardsEncoded = encodeDeck(communityCards);
+        std::vector<EquityResult> equityResults = calcEquityAll(players, communityCardsEncoded, street, remainingDeck, 1000, sizeofDeck);
+        std::cout << "Equity Results:\n";
+        std::cout << equityResultsToString(equityResults) << "\n";
+
 
         if (playersInHand == 1)
         {
@@ -110,6 +117,7 @@ void Game::playStreet()
     currentPlayerIndex = getFirstToActIndex();
     // Reset all players' current bets
     highestBet = 0;
+
     if (street != PREFLOP){
         for (auto &player : players)
         {

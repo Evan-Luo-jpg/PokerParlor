@@ -27,6 +27,11 @@ public:
 
     // Function to reset the deck
     void reset();
+
+    // Function to get the cards in the deck
+    const std::vector<Card>& getCards() const {
+        return cards;
+    }
 };
 
 #endif

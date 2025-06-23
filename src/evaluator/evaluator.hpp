@@ -1,4 +1,5 @@
 #include "../deck/card.hpp"
+#include <vector>
 
 #define	STRAIGHT_FLUSH  1
 #define	FOUR_OF_A_KIND  2

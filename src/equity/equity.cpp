@@ -5,6 +5,7 @@
 #include <vector>
 #include <cstring>
 #include <unordered_map>
+#include <random>
 
 EquityResult calcEquity(const std::vector<Player>& players, const Player player,
                         const int* communityCards, Street street,
@@ -25,7 +26,9 @@ EquityResult calcEquity(const std::vector<Player>& players, const Player player,
         // 1. Copy and shuffle only the valid part of the deck
         int deckCopy[sizeofDeck];
         std::memcpy(deckCopy, remainingDeck, sizeof(int) * sizeofDeck);
-        std::random_shuffle(deckCopy, deckCopy + sizeofDeck);
+        std::random_device rd;
+        std::mt19937 g(rd());
+        std::shuffle(deckCopy, deckCopy + sizeofDeck, g);
 
         // 2. Complete the board
         int fullBoard[5];
@@ -90,3 +93,17 @@ std::vector<EquityResult> calcEquityAll(
     return results;
 }
 
+std::string equityToString(const EquityResult& result) {
+    std::stringstream ss;
+    ss << "Player ID: " << result.player.getID() << ", Equity: " << result.equity
+       << ", Tie: " << result.tie;
+    return ss.str();
+}
+
+std::string equityResultsToString(const std::vector<EquityResult>& results) {
+    std::stringstream ss;
+    for (const auto& result : results) {
+        ss << equityToString(result) << "\n";
+    }
+    return ss.str();
+}
