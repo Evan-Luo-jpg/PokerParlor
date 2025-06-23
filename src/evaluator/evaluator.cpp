@@ -241,7 +241,7 @@ int encodeCard(const Card& card) {
 }
 
 
-// Encoding the whole deck for the Monte Carlo simulation
+// Encoding the whole deck for the Monte Carlo simulation and community cards
 int* encodeDeck(const std::vector<Card>& deck) {
     int* encodedDeck = new int[deck.size()];
     for (size_t i = 0; i < deck.size(); ++i) {
