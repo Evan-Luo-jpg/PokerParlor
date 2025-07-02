@@ -5,6 +5,8 @@
 #include "../evaluator/evaluator.hpp"
 
 
+
+
 class Game{
     private:
     int time;
@@ -20,6 +22,8 @@ class Game{
     Deck deck;
 
     std::vector<Card> communityCards;
+
+    std::vector<EquityResult> equityResults;
 
     public:
     // Constructor to initialize the game

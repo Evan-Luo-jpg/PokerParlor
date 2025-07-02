@@ -76,21 +76,14 @@ Action Player::getAction(std::vector<Action> possibleActions)
 {
     //Choose from the possible actions
 
-    // If the timer reaches 30, the player will fold
+    // If the timer reaches 60, the player will fold
     auto start = std::chrono::high_resolution_clock::now();
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> elapsed = end - start;
-    while (elapsed.count() < 30)
+    while (elapsed.count() < 60)
     {
         end = std::chrono::high_resolution_clock::now();
 
-        // If the player is a bot, choose a random action
-        if (bot)
-        {
-            // Randomly choose an action
-            int randomIndex = rand() % possibleActions.size();
-            return possibleActions[randomIndex];
-        }
         // If the player is not a bot, get the action from the console
         std::cout << "Player " << ID << " has " << stack << " chips. Choose an action: ";
         
@@ -136,23 +129,18 @@ Action Player::getAction(std::vector<Action> possibleActions, double equity, int
                 return FOLD;
             }
         }
-        // Raise logic: raise by a fraction of stack proportional to equity
-        if (std::find(possibleActions.begin(), possibleActions.end(), RAISE) != possibleActions.end()) {
-            int raiseAmount = static_cast<int>(stack * equity);
-            // Only raise if raiseAmount is meaningful
-            if (raiseAmount > 0) {
-                // You may want to return a struct with action and amount, or set a member variable
-                // For now, just return RAISE and handle amount elsewhere
-                return RAISE;
-            }
+        // Raise logic: raise only if equity is greater than 0.4
+        if (equity > 0.4) {
+           return RAISE;
         }
         // Otherwise, check if possible
         if (std::find(possibleActions.begin(), possibleActions.end(), CHECK) != possibleActions.end()) {
             return CHECK;
         }
-        // Default to fold
-        return FOLD;
     }
+
+    // If the player is not a bot or if nothing is possible
+    return FOLD;
 }
 
 // Function to get the player's ID

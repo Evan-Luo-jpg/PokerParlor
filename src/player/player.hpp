@@ -2,6 +2,7 @@
 #define PLAYER_H
 #include <vector>
 #include "../deck/deck.hpp"
+#include <algorithm>
 
 
 // Enum to represent the action of a player

@@ -30,7 +30,7 @@ void Game::startRound()
     // Deal two cards to each player
     for (auto &player : players)
     {
-        player.clearHand();
+        player.reset();
         player.addCards(deck.draw(), deck.draw());
     }
     std::cout << "Players have been dealt their cards.\n";
@@ -57,17 +57,19 @@ void Game::playRound()
         // Print street
         std::cout << "The current street is: " << street << "\n";
 
-        // Play the street
-        playStreet();
-
         // Equity count
         int* remainingDeck = encodeDeck(deck.getCards());
         int sizeofDeck = deck.getCards().size();
         int* communityCardsEncoded = encodeDeck(communityCards);
-        std::vector<EquityResult> equityResults = calcEquityAll(players, communityCardsEncoded, street, remainingDeck, 1000, sizeofDeck);
+        this->equityResults = calcEquityAll(players, communityCardsEncoded, street, remainingDeck, 1000, sizeofDeck);
+        // Free the memory
+        delete[] remainingDeck;
+        delete[] communityCardsEncoded;
         std::cout << "Equity Results:\n";
         std::cout << equityResultsToString(equityResults) << "\n";
 
+        // Play the street
+        playStreet();
 
         if (playersInHand == 1)
         {
@@ -211,6 +213,7 @@ void Game::playStreet()
             continue;
         }
 
+
         std::vector<Action> possibleActions;
         if (player.getCurrentBet() == highestBet)
         {
@@ -225,7 +228,31 @@ void Game::playStreet()
             possibleActions = {FOLD, CHECK, RAISE};
         }
 
-        Action action = player.getAction(possibleActions);
+        double equity = 0.0;
+        if (player.isBot()) {
+            // Find this player's equity
+            for (const auto& eq : equityResults) {
+                if (eq.player.getID() == player.getID()) {
+                    equity = eq.equity;
+                    break;
+                }
+            }
+        }
+
+        int callAmount = highestBet - player.getCurrentBet();
+        if (callAmount > player.getStack()){
+            callAmount = player.getStack();
+        }
+        int stack = player.getStack();
+
+        Action action;
+        if (player.isBot()) {
+            action = player.getAction(possibleActions, equity, pot, callAmount, stack);
+        } else {
+            action = player.getAction(possibleActions);
+        }
+        
+
         switch (action)
         {
         case CHECK:
@@ -236,11 +263,22 @@ void Game::playStreet()
             player.fold();
             playersInHand--;
             std::cout << "Player " << player.getID() << " folds.\n";
+
+            if (playersInHand == 1) {
+                std::cout << "Everyone has folded, the game is over\n";
+                return;
+            }
+
             break;
 
         case CALL:
         {
             int callAmount = highestBet - player.getCurrentBet();
+
+            if (callAmount > player.getStack()){
+                callAmount = player.getStack();
+            }
+
             player.bet(callAmount);
             pot += callAmount;
 
@@ -264,13 +302,18 @@ void Game::playStreet()
             std::cout << "Player " << player.getID() << " raises by: ";
             if (player.isBot())
             {
-                raiseAmount = rand() % player.getStack(); // Bot raises random number of stack
+                raiseAmount = static_cast<int>(player.getStack() * equity);
                 std::cout << raiseAmount << "\n";
             }
             else
             {
                 std::cin >> raiseAmount;
             }
+
+            if (raiseAmount > player.getStack()){
+                raiseAmount = player.getStack();
+            }
+
             highestBet += raiseAmount;
             lastRaiser = currentPlayerIndex;
             raiseAmount = highestBet - player.getCurrentBet();
@@ -396,11 +439,11 @@ void Game::evaluateWinner()
         std::cout << "\n";
         // Split the pot among winners
         int splitPot = pot / winners.size();
-        for (auto &winnerID : winners)
+        for (auto &winner : winners)
         {
             for (auto &player : players)
             {
-                if (player.getID() == winnerID)
+                if (player.getID() == winner)
                 {
                     player.addToStack(splitPot);
                     std::cout << "Player " << player.getID() << " wins " << splitPot << " chips.\n";
@@ -410,12 +453,7 @@ void Game::evaluateWinner()
     }
     else
     {
-        if (winners.size() > 0){
-            long winnerID = winners[0];
-        }else{
-            std::cout << "No winner found\n";
-            return;
-        }
+        long winnerID = winners[0];
         for (auto &player : players)
         {
             if (player.getID() == winnerID)
