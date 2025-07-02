@@ -188,11 +188,7 @@ void Game::playStreet()
     // Betting round
     while (!bettingOver)
     {
-         if (playersAllIn())
-        {
-            std::cout << "All players are all in \n";
-            return;
-        }
+
         Player &player = getCurrentPlayer();
 
         if (player.hasFolded() || player.isAllIn())
@@ -247,7 +243,18 @@ void Game::playStreet()
             int callAmount = highestBet - player.getCurrentBet();
             player.bet(callAmount);
             pot += callAmount;
+
+            if (player.isAllIn()){
+                playersInHand--;
+            }
+
             std::cout << "Player " << player.getID() << " calls.\n";
+
+            if (playersAllIn()) {
+                std::cout << "All players are all in\n";
+                return;
+            }
+
             break;
         }
 
@@ -269,7 +276,18 @@ void Game::playStreet()
             raiseAmount = highestBet - player.getCurrentBet();
             player.bet(raiseAmount);
             pot += raiseAmount;
+
+            if (player.isAllIn()){
+                playersInHand--;
+            }
+
             std::cout << "Player " << player.getID() << " raises to " << highestBet << ".\n";
+
+            if (playersAllIn()) {
+                std::cout << "All players are all in\n";
+                return;
+            }
+
             break;
         }
         }
@@ -314,10 +332,13 @@ bool Game::bettingComplete(int lastRaiser)
 // Move to the next player
 void Game::nextPlayer()
 {
+    if(playersAllIn() || playersInHand == 1){
+        return;
+    }
     do
     {
         currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
-    } while (players[currentPlayerIndex].hasFolded());
+    } while (players[currentPlayerIndex].hasFolded() || players[currentPlayerIndex].isAllIn());
 }
 
 // Get the current player
@@ -389,7 +410,12 @@ void Game::evaluateWinner()
     }
     else
     {
-        long winnerID = winners[0];
+        if (winners.size() > 0){
+            long winnerID = winners[0];
+        }else{
+            std::cout << "No winner found\n";
+            return;
+        }
         for (auto &player : players)
         {
             if (player.getID() == winnerID)

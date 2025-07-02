@@ -13,6 +13,14 @@ Player::Player(long ID, int stack, bool bot)
     this->bot = bot; // Set to true if the player is a bot
 }
 
+// Function to reset the player
+void Player::reset()
+{
+    allIn = false;
+    currentBet = 0;
+    hand.clear();
+}
+
 // Is all in
 bool Player::isAllIn()
 {
@@ -122,7 +130,6 @@ long Player::getID() const
 void Player::fold()
 {
     clearHand();
-    folded = true; // Set the player as folded
 }
 
 // Function to reset the players current bet

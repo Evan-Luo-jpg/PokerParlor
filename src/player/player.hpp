@@ -18,7 +18,6 @@ class Player
 {
 private:
     std::vector<Card> hand;
-    bool folded; // Indicates if the player has folded
     long ID;
     int stack;
     int currentBet;
@@ -27,6 +26,8 @@ private:
 public:
     // Constructor to initialize the player
     Player(long ID, int stack, bool bot = false);
+
+    void reset();
 
     // Is all in
     bool isAllIn();
