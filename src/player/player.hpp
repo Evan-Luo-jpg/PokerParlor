@@ -89,6 +89,10 @@ public:
     //Function to get the action of the player
     Action getAction(std::vector<Action> possibleActions);
 
+    //Overload the getAction function for bots
+    Action getAction(std::vector<Action> possibleActions, double equity, int pot, int callAmount, int stack);
+
+
     // Function to get the player's ID
     long getID() const;
 

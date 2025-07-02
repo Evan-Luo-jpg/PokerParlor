@@ -120,6 +120,41 @@ Action Player::getAction(std::vector<Action> possibleActions)
     return FOLD;
 }
 
+
+//Overloaded getAction function for bots
+Action Player::getAction(std::vector<Action> possibleActions, double equity, int pot, int callAmount, int stack)
+{
+    if (bot) {
+        // Calculate pot odds
+        double potOdds = (double)callAmount / (pot + callAmount);
+
+        // Only call if equity > pot odds (positive EV)
+        if (std::find(possibleActions.begin(), possibleActions.end(), CALL) != possibleActions.end()) {
+            if (equity > potOdds) {
+                return CALL;
+            } else {
+                return FOLD;
+            }
+        }
+        // Raise logic: raise by a fraction of stack proportional to equity
+        if (std::find(possibleActions.begin(), possibleActions.end(), RAISE) != possibleActions.end()) {
+            int raiseAmount = static_cast<int>(stack * equity);
+            // Only raise if raiseAmount is meaningful
+            if (raiseAmount > 0) {
+                // You may want to return a struct with action and amount, or set a member variable
+                // For now, just return RAISE and handle amount elsewhere
+                return RAISE;
+            }
+        }
+        // Otherwise, check if possible
+        if (std::find(possibleActions.begin(), possibleActions.end(), CHECK) != possibleActions.end()) {
+            return CHECK;
+        }
+        // Default to fold
+        return FOLD;
+    }
+}
+
 // Function to get the player's ID
 long Player::getID() const
 {
