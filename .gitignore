@@ -1,4 +1,4 @@
 /build/
 .vscode/
 CMakeFiles/
-tester
+tests/output_*.txt

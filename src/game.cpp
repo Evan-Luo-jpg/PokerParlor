@@ -52,10 +52,24 @@ void Game::startRound()
 // Play a round with betting logic
 void Game::playRound()
 {
+    // Equity count for Preflop
+    int* remainingDeck = encodeDeck(deck.getCards());
+    int sizeofDeck = deck.getCards().size();
+    int* communityCardsEncoded = encodeDeck(communityCards);
+    this->equityResults = calcEquityAll(players, communityCardsEncoded, street, remainingDeck, 1000, sizeofDeck);
+    // Free the memory
+    delete[] remainingDeck;
+    delete[] communityCardsEncoded;
+    std::cout << "Equity Results:\n";
+    std::cout << equityResultsToString(equityResults) << "\n";
     while (playersInHand > 1 && street != SHOWDOWN)
     {
         // Print street
         std::cout << "The current street is: " << street << "\n";
+
+
+        // Play the street
+        playStreet();
 
         // Equity count
         int* remainingDeck = encodeDeck(deck.getCards());
@@ -67,9 +81,6 @@ void Game::playRound()
         delete[] communityCardsEncoded;
         std::cout << "Equity Results:\n";
         std::cout << equityResultsToString(equityResults) << "\n";
-
-        // Play the street
-        playStreet();
 
         if (playersInHand == 1)
         {
